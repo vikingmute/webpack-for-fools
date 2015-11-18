@@ -1,2 +1,5 @@
-# webpack-for-fools
-webpack tutorial for fools
+# Webpack傻瓜式指南
+
+这是一系列教你使用webpack的教程，计划写3-4篇。
+
+同时配有对应的demo，让你更好的了解这个工具。
