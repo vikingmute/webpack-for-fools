@@ -1,6 +1,6 @@
 ## Webpack傻瓜式指南（一）
 
-webpack最近很热，我一开始是想翻译一篇国外关于webpack的佳作，但是找来找去也没有一篇让我感觉到很满意的，不是晦涩难懂，就是不够全面，官方文档写的一坨翔，所以我参考了几篇文章，不如自己来写一篇让人可以非常容易上手的，一步一步的指南，让大家了解它基本的用法和它的优点。本文适合第一次接触webpack的朋友，如果是老鸟，就不用看了。
+webpack最近很热，我一开始是想翻译一篇国外关于webpack的佳作，但是找来找去也没有一篇让我感觉到很满意的，不是晦涩难懂，就是不够全面，要不就是一步到位，满屏幕都是React＋Webpack，官方文档写的一坨翔，所以我参考了几篇文章，不如自己来写一篇让人可以非常容易上手的，一步一步的指南，让大家了解它基本的用法和它的优点。本文适合第一次接触webpack的朋友，如果是老鸟，就不用看了。
 
 如果你原来一系列的构建工具，grunt或者gulp之类的，这里有一篇webpack和他们比较的文章可以读一读，我这里就不写简介比较之类的东西了，我们直接了解怎么使用，从代码里面自己感受它的魅力。
 [Webpack Compared](http://survivejs.com/webpack_react/webpack_compared/)
@@ -384,3 +384,9 @@ app.appendChild(generateText());
 >[https://christianalfoni.github.io/react-webpack-cookbook/index.html](https://christianalfoni.github.io/react-webpack-cookbook/index.html)
 
 ### 很硬的链接
+
+把这一节的代码做了一个repo，想看所有源码的可以clone下
+[https://github.com/vikingmute/webpack-basic-starter](https://github.com/vikingmute/webpack-basic-starter)
+
+同时这一系列关于Webpack的文章也可以在github找到
+[https://github.com/vikingmute/webpack-for-fools](https://github.com/vikingmute/webpack-for-fools)
