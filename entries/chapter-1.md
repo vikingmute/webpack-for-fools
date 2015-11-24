@@ -23,9 +23,9 @@ npm install -g webpack
 webpack简单点来说就就是一个配置文件，所有的魔力都是在这一个文件中发生的。
 这个配置文件主要分为三大块
 
-* entry 入口文件 我们让webpack用哪个文件作为项目的入口
-* output 出口 我们让webpack把处理完成的文件放在哪里
-* module 模块 我们要用什么模块来处理各种类型的文件
+* entry 入口文件 让webpack用哪个文件作为项目的入口
+* output 出口 让webpack把处理完成的文件放在哪里
+* module 模块 要用什么不同的模块来处理各种类型的文件
 
 下面我们就一步一步来新建一个简单的项目
 
@@ -48,14 +48,14 @@ node_modules
 ```
 
 ### 项目结构
-现在我们项目里面就有一个package.json， 我们多加一点东西，慢慢丰富它的内容。
+现在项目里面就有一个package.json， 我们多加一点东西，慢慢丰富它的内容。
 * /app
 	* index.js
 	* sub.js
 * package.json
 * webpack.config.js
 
-我们添加了两个js文件，添加了我们最重要的webpack的配置文件，我们还是从非常简单的hello world开始玩起，webpack原生直接支持AMD和CommonJS两种格式，如果你想使用ES6的风格，这点我们以后再提。
+添加了两个js文件，添加了最重要的webpack的配置文件，我们还是从非常简单的hello world开始玩起，webpack原生直接支持AMD和CommonJS两种格式，如果你想使用ES6的风格，这点以后再提。
 
 ### JS代码
 
@@ -81,17 +81,17 @@ app.innerHTML = '<h1>Hello World</h1>';
 app.appendChild(sub());
 document.body.appendChild(app);
 ```
-代码写完了，完成一个很简单的功能，我们新建一个单独的module，并且在另外一个module里面引用他，最后会在页面里面输出两个标题。
+代码写完了，完成一个很简单的功能，新建一个单独的module，并且在另外一个module里面引用他，最后会在页面里面输出两个标题。
 
 ### 配置Webpack
 
-现在我们开始配置webpack，目标是把这两个js文件合并成一个文件. 我们可以自己在build文件夹里面手动建一个index.html文件夹，然后再把合并以后的js引用在里面，但是这样有些麻烦，所以我们这里安装一个plugin，可以自动快速的帮我们生成HTML。
+现在开始配置webpack，目标是把这两个js文件合并成一个文件. 我们可以自己在build文件夹里面手动建一个index.html文件夹，然后再把合并以后的js引用在里面，但是这样有些麻烦，所以我们这里安装一个plugin，可以自动快速的帮我们生成HTML。
 
 ```bash
 npm install html-webpack-plugin --save-dev
 ```
 
-好 有了这个插件 我们开始写config文件
+好 有了这个插件 开始写config文件
 
 ```javascript
 
@@ -118,7 +118,7 @@ module.exports = {
   ]
 };
 ```
-然后我们在项目根目录运行
+然后在项目根目录运行
 
 ```bash
 webpack
@@ -131,7 +131,7 @@ webpack
 
 ### 配置webpack-dev-server
 
-上面任务虽然完成了，但是我们要不断运行程序然后查看页面，所以我们要新建一个开发服务器，可以serve我们pack以后的代码，并且当代码更新的时候自动刷新浏览器。
+上面任务虽然完成了，但是我们要不断运行程序然后查看页面，所以最好新建一个开发服务器，可以serve我们pack以后的代码，并且当代码更新的时候自动刷新浏览器。
 
 安装webpack-dev-server
 
@@ -163,7 +163,7 @@ module.exports = {
 ...
 ```
 
-好了，万事具备了，我们在项目根目录下输入npm start,一堆花花绿绿的信息后server已经起来了，在浏览器里面输入http://localhost:8080 发现我们伟大的hello world出现了，在js里面随便修改一些输出然后保存, boom!浏览器自动刷新，新的结果出现了。
+好了，万事具备了，在项目根目录下输入npm start,一堆花花绿绿的信息后server已经起来了，在浏览器里面输入http://localhost:8080 发现伟大的hello world出现了，在js里面随便修改一些输出然后保存, boom!浏览器自动刷新，新的结果出现了。
 
 > 拓展阅读
 如果你的服务器端使用的是express框架，你还可以直接安装express的middleware，webpack配合express，很好用。
@@ -177,7 +177,7 @@ npm install webpack-dev-middleware --save-dev
 
 ### 添加CSS样式
 
-现在来添加一些样式，webpack使用loader的方式来处理各种各样的资源，比如说样式文件，我们需要两种loader，css-loader 和 style－loader，css-loader会遍历我们的css文件，并且找到所有的url(...)并且处理。style-loader会把所有的样式插入到你页面的一个style tag中。
+现在来添加一些样式，webpack使用loader的方式来处理各种各样的资源，比如说样式文件，我们需要两种loader，css-loader 和 style－loader，css-loader会遍历css文件，找到所有的url(...)并且处理。style-loader会把所有的样式插入到你页面的一个style tag中。
 
 安装我们的loader
 
@@ -224,9 +224,9 @@ h1 {
 ```javascript
 require('./main.css');
 ```
-然后发现我们伟大的标题变成红色的了，webpack的理念是基于项目处理的，把对应的文件格式给对应的loader处理，然后你就不用管了，它会决定怎么压缩，编译。
+然后发现标题变成红色的了，webpack的理念是基于项目处理的，把对应的文件格式给对应的loader处理，然后你就不用管了，它会决定怎么压缩，编译。
 
-那我们现在想使用一些有爱的css预编译程序，来点sass吧。 你可能已经想到了，再来个loader就行啦，确实是这样简单。
+那现在想使用一些有爱的css预编译程序，来点sass吧。 你可能已经想到了，再来个loader就行啦，确实是这样简单。
 
 ```bash
 npm install sass-loader --save-dev
@@ -266,7 +266,7 @@ require('./main.scss');
 
 然后发现标题如愿变红，相当简单吧。
 
-### 添加图片
+### 处理图片
 
 这个和其他一样，也许你也已经会玩了。安装loader，处理文件。不过有个神奇的地方它可以根据你的需求将一些图片自动转成base64编码的，为你减轻很多的网络请求。
 
@@ -288,7 +288,7 @@ npm install url-loader --save-dev
 
 下面举个栗子。
 
-新建一个imgs文件夹，往里面添加一张帅帅的崔叔的照片。在scss文件中添加如下的东西。
+新建一个imgs文件夹，往里面添加一张崔叔的照片。在scss文件中添加如下的东西。
 
 ```css
 @import "./variables.scss";
@@ -299,13 +299,13 @@ h1 {
 }
 ```
 
-npm start, 然后查看我们崔图片的url，发现神奇。
+npm start, 然后查看图片的url，发现神奇。
 
 ![Shot](./shots.png)
 
 ### 添加第三方库
 
-有的时候你还想来点jquery，moment，undersocre之类的库，webpack可以非常容易的做到这一点，有谣言说Bower即将停止开发了, 作者推荐都使用npm来管理依赖。那么我们现在安装在我们的app中添加jquery和moment的支持。
+有的时候还想来点jquery，moment，undersocre之类的库，webpack可以非常容易的做到这一点，有谣言说Bower即将停止开发了, 作者推荐都使用npm来管理依赖。那么我们现在安装在我们的app中添加jquery和moment的支持。
 
 ```bash
 npm install jquery moment --save-dev
@@ -327,6 +327,7 @@ $('body').append('<p>look at me! now is ' + moment().format() + '</p>');
 ```
 
 看看浏览器，成功！ jquery和moment现在都起作用了！
+
 
 ### 添加ES6的支持
 
@@ -392,7 +393,7 @@ app.appendChild(generateText());
 
 ### 结语
 
-第一部分到这里结束，经过一系列例子，你应该能够了解webpack最基本的用法了吧。下一部分我们会继续讨论一些webpack更高级的用法。
+第一部分到这里结束，经过一系列例子，你应该能够了解webpack最基本的用法了吧。是否已经喜欢上这种简洁的配置了？下一部分我们会继续讨论一些webpack更高级的用法。
 
 ### 参考文章
 >[http://survivejs.com/webpack_react/](http://survivejs.com/webpack_react/)
