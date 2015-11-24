@@ -1,9 +1,12 @@
 ## Webpack傻瓜式指南（一）
 
-webpack最近很热，我一开始是想翻译一篇国外关于webpack的佳作，但是找来找去也没有一篇让我感觉到很满意的，不是晦涩难懂，就是不够全面，要不就是一步到位，满屏幕都是React＋Webpack，官方文档写的一坨翔，所以我参考了几篇文章，不如自己来写一篇让人可以非常容易上手的，一步一步的指南，让大家了解它基本的用法和它的优点。本文适合第一次接触webpack的朋友，如果是老鸟，就不用看了。
+webpack最近很热，我一开始是想翻译一篇国外关于webpack的佳作，但是找来找去也没有一篇让我感觉到很满意的，好多都是一步到位，满屏幕都是React＋Webpack，官方文档写的不太好，好多点都没有解释的详细，所以我参考了几篇文章，写一篇容易上手的指南。本文适合第一次接触webpack的朋友，如果是老鸟，就不用看了。这是系列的第一篇，主要讲他最基本的用法。
+
+### 比较
 
 如果你原来一系列的构建工具，grunt或者gulp之类的，这里有一篇webpack和他们比较的文章可以读一读，我这里就不写简介比较之类的东西了，我们直接了解怎么使用，从代码里面自己感受它的魅力。
 [Webpack Compared](http://survivejs.com/webpack_react/webpack_compared/)
+
 
 ### 安装
 
@@ -13,9 +16,19 @@ webpack最近很热，我一开始是想翻译一篇国外关于webpack的佳作
 npm install -g webpack
 ```
 
+### 总览
+webpack简单点来说就只有一个配置文件，所有的魔力都是在这一个文件中发生的。
+这个配置文件主要分为三大块
+
+* entry 入口文件 我们让webpack用哪个文件作为项目的入口
+* output 出口 我们让webpack把处理完成的文件放在哪里
+* module 模块 我们要用什么模块来处理各种类型的文件
+
+下面我们就一步一步来新建一个简单的项目
+
 ### 建立项目
 
-然后我们建一个测试项目，然后新建一个package.json的文件在项目根目录下
+建一个文件夹，然后新建一个package.json的文件在项目根目录下
 
 ```bash
 mkdir webpack
@@ -69,7 +82,7 @@ document.body.appendChild(app);
 
 ### 配置Webpack
 
-现在我们开始配置webpack，生成一个index.html文件，并且把这两个js文件合并成一个模块.我们可以自己在build文件夹里面手动建一个index.html文件夹，然后再把合并以后的js引用在里面，但是这样以后维护起来会越来越麻烦，所以我们这里安装一个plugin，可以自动快速的帮我们生成HTML。
+现在我们开始配置webpack，目标是把这两个js文件合并成一个文件. 我们可以自己在build文件夹里面手动建一个index.html文件夹，然后再把合并以后的js引用在里面，但是这样有些麻烦，所以我们这里安装一个plugin，可以自动快速的帮我们生成HTML。
 
 ```bash
 npm install html-webpack-plugin --save-dev
@@ -115,14 +128,14 @@ webpack
 
 ### 配置webpack-dev-server
 
-上面任务虽然完成了，但是非常蛋疼，我们要不断运行程序然后查看页面，所以我们要新建一个开发服务器，可以serve我们pack以后的代码，并且当代码更新的时候自动刷新浏览器。
+上面任务虽然完成了，但是我们要不断运行程序然后查看页面，所以我们要新建一个开发服务器，可以serve我们pack以后的代码，并且当代码更新的时候自动刷新浏览器。
 
 安装webpack-dev-server
 
 ```bash
 npm install webpack-dev-server --save-dev
 ```
-安装完毕后 在config中配置
+安装完毕后 在config中添加配置
 
 ```javascript
 module.exports = {
@@ -161,7 +174,7 @@ npm install webpack-dev-middleware --save-dev
 
 ### 添加CSS样式
 
-现在来给我们的小app添加一些样式，webpack使用loader的方式来处理各种各样的资源，比如说样式文件，我们需要两种loader，css-loader 和 style－loader，css-loader会遍历我们的css文件，并且找到所有的url(...)并且处理。style-loader会把所有的样式插入到你页面的一个style tag中。
+现在来添加一些样式，webpack使用loader的方式来处理各种各样的资源，比如说样式文件，我们需要两种loader，css-loader 和 style－loader，css-loader会遍历我们的css文件，并且找到所有的url(...)并且处理。style-loader会把所有的样式插入到你页面的一个style tag中。
 
 安装我们的loader
 
@@ -204,7 +217,7 @@ h1 {
 	color: red;
 }
 ```
-在index.js中引用
+记得在入口文件index.js中引用
 ```javascript
 require('./main.css');
 ```
