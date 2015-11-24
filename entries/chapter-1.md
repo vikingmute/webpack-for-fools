@@ -4,7 +4,7 @@ webpack最近很热，我一开始是想翻译一篇国外关于webpack的佳作
 
 ### 比较
 
-如果你原来一系列的构建工具，grunt或者gulp之类的，这里有一篇webpack和他们比较的文章可以读一读，我这里就不写简介比较之类的东西了，我们直接了解怎么使用，从代码里面自己感受它的魅力。
+如果你熟悉原来一系列的构建工具，grunt或者gulp之类的，这里有一篇webpack和他们比较的文章可以读一读。
 [Webpack Compared](http://survivejs.com/webpack_react/webpack_compared/)
 
 
@@ -17,7 +17,10 @@ npm install -g webpack
 ```
 
 ### 总览
-webpack简单点来说就只有一个配置文件，所有的魔力都是在这一个文件中发生的。
+官网对webpack的定义是MODULE BUNDLER，他的目的就是把有依赖关系的各种文件打包成一系列的静态资源。 请看下图
+![what is webpack](./webpack.png)
+
+webpack简单点来说就就是一个配置文件，所有的魔力都是在这一个文件中发生的。
 这个配置文件主要分为三大块
 
 * entry 入口文件 我们让webpack用哪个文件作为项目的入口
@@ -389,7 +392,7 @@ app.appendChild(generateText());
 
 ### 结语
 
-第一部分到这里结束，经过一系列例子，你应该能够了解webpack最基本的用法了吧，压缩，转换，构建。下一部分我们会继续讨论一些webpack更高级的用法。
+第一部分到这里结束，经过一系列例子，你应该能够了解webpack最基本的用法了吧。下一部分我们会继续讨论一些webpack更高级的用法。
 
 ### 参考文章
 >[http://survivejs.com/webpack_react/](http://survivejs.com/webpack_react/)
