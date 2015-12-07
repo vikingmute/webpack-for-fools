@@ -8,4 +8,4 @@
 
 * [初步认识webpack，学会使用webpack基本的功能。](entries/chapter-1.md)
 * [Webpack开发和项目上线的技巧。](entries/chapter-2.md)
-* [使用Webpack配合其他流行的库(React, Backbone等)。](entries/chapter-1.md)
+* [使用Webpack配合其他流行的库(React, Backbone等)。](entries/chapter-3.md)
