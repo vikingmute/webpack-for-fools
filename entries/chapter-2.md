@@ -295,7 +295,7 @@ plugins: [
     title: 'Hello Mobile app',
     template: path.resolve(TEM_PATH, 'mobile.html'),
     filename: 'mobile.html',
-    chunks: ['app', 'vendors'],
+    chunks: ['mobile', 'vendors'],
     inject: 'body'
   })
   ...
