@@ -251,9 +251,8 @@ npm run dev
 ![webpack start](./start.png)
 
 
-~~### 添加Hot Loading Component的支持
 
-现在看起来已经不错了，但是我们要更完美。
+~~现在看起来已经不错了，但是我们要更完美。
 发现现在每次修改一个component的代码，页面都会重新刷新，这会造成一个很不爽的问题，程序会丢失状态，当然现在在简单的程序中这个完全无所谓，但是假如程序变得越来越复杂，想要返回这种状态你可能又要经历一系列的点击等操作，会耗费一些时间。
 
 为了解决这个问题，隆重推出React Hot Loader
@@ -279,7 +278,7 @@ npm install react-hot-loader --save-dev
 
 对于一个jsx文件，先用react-hot-loader去处理它，然后再用babel-loader处理，你们也许发现query参数被移动到了babel?后面，这样看起来是有点不雅，但是这里有两个loader，不能直接把调用这个loader的参数写在外面，所以就这样啦。
 
-修改完后，运行webpack，然后随便改动h1标题里面的文字，发现页面没有刷新，但是自动内容自动改变了，大功告成～~~
+修改完后，运行webpack，然后随便改动h1标题里面的文字，发现页面没有刷新，但是自动内容自动改变了，大功告成~~
 
 ###添加React Transform支持
 
