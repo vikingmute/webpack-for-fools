@@ -237,7 +237,7 @@ class App extends React.Component{
 
 const app = document.createElement('div');
 document.body.appendChild(app);
-ReactDOM.render(<app />, app);
+ReactDOM.render(<App />, app);
 ```
 
 再用webpack运行就可以看到结果了。
@@ -251,7 +251,7 @@ npm run dev
 ![webpack start](./start.png)
 
 
-### 添加Hot Loading Component的支持
+~~### 添加Hot Loading Component的支持
 
 现在看起来已经不错了，但是我们要更完美。
 发现现在每次修改一个component的代码，页面都会重新刷新，这会造成一个很不爽的问题，程序会丢失状态，当然现在在简单的程序中这个完全无所谓，但是假如程序变得越来越复杂，想要返回这种状态你可能又要经历一系列的点击等操作，会耗费一些时间。
@@ -279,8 +279,84 @@ npm install react-hot-loader --save-dev
 
 对于一个jsx文件，先用react-hot-loader去处理它，然后再用babel-loader处理，你们也许发现query参数被移动到了babel?后面，这样看起来是有点不雅，但是这里有两个loader，不能直接把调用这个loader的参数写在外面，所以就这样啦。
 
-修改完后，运行webpack，然后随便改动h1标题里面的文字，发现页面没有刷新，但是自动内容自动改变了，大功告成～
+修改完后，运行webpack，然后随便改动h1标题里面的文字，发现页面没有刷新，但是自动内容自动改变了，大功告成～~~
 
+###添加React Transform支持
+
+**更新** 上面所说的React Hot Loading已经过时了，开发者也宣布已经停止维护，现在有一个更强大的babel plugin： React Transform来代替他。
+
+现在每次修改一个component的代码，页面都会重新刷新，这会造成一个很不爽的问题，程序会丢失状态，当然现在在简单的程序中这个完全无所谓，但是假如程序变得越来越复杂，想要返回这种状态你可能又要经历一系列的点击等操作，会耗费一些时间。 
+
+隆重推出[Babel-plugin-react-transform](https://github.com/gaearon/babel-plugin-react-transform) 名字挺长, 看起来挺吓人，其实你就可以想象用这个东西可以实时的对你的React Component做各种处理，它是基于Babel Plugin。
+废话不多说，花点时间感受一下它是怎么玩的。
+
+先安装
+
+```bash
+npm install --save-dev babel-plugin-react-transform
+```
+
+这是个基本的架子，可以通过它完成各种transform，如果想实现Hot Module Replacement (说白了就是页面不刷新，直接替换修改的Component)，再安装一个transform.
+
+```bash
+npm install --save-dev react-transform-hmr
+```
+依赖就安装完毕了。
+
+如果我们还要再来一个在页面上直接显示catch到的错误的transform，（不想打开console看到底有啥错误，直接显示在页面上多好），简单！再安装一个transform:
+```bash
+npm install --save-dev react-transform-catch-errors redbox-react
+```
+
+依赖安装完毕，配置Babel，上面说到把Babel的配置都写在webpack.config.js中，这是一个不好的方法，因为随着Babel的config越来越多，那样会显得非常臃肿，把babel的配置分离出来。
+
+在跟目录新建一个Babel的配置文件: **.babelrc**, 把原来的配置写进去。
+
+```javascript
+{
+  "presets": ["react", "es2015"]
+}
+```
+
+现在在webpack里面的config就可以简化了，把那些query参数都删掉，简单了很多：
+
+```javascript
+...
+  module: {
+    loaders: [
+      {
+        test: /\.jsx?$/,
+        loader: 'babel',
+        include: APP_PATH      
+    }]
+  },
+...
+```
+要让新建的两个transform生效,只需再安装一个present。
+
+```bash
+npm install babel-preset-react-hmre --save-dev
+```
+
+安装完毕，将支持HMR和Catch Error的present添加到.babelrc
+
+```
+{
+  "presets": ["react", "es2015"],
+  //在开发的时候才启用HMR和Catch Error
+  "env": {
+   "development": {
+     "presets": ["react-hmre"]
+   }
+  }
+}
+```
+
+配置完毕！ 启动npm run dev 
+
+看看效果。然后随便改动h1标题里面的文字，发现页面没有刷新，但是自动内容自动改变了，在render方法中故意弄一些错误，出现了可爱的红色错误提示，大功告成～~~
+
+![transform error](./transform-error.png)
 
 ### 继续项目
 
