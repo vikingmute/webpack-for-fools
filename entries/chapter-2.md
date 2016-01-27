@@ -15,6 +15,19 @@
 ```
 这样出错以后就会采用source-map的形式直接显示你出错代码的位置。
 
+**为css启用source-map**
+
+javascript有了这个特性，css自然不能落后，其实很简单，只要在loader里面添加一个参数即可
+
+```javascript
+  ...
+  {
+    test: /\.scss$/,
+    loaders: ['style', 'css?sourceMap', 'sass?sourceMap'],
+    include: APP_PATH
+  },
+  ...
+```
 ### 配置webpack-dev-server代理
 
 既然常用webpack做React一类的SPA，那么一个典型的例子就是前后端分离。后端是一个RESTful的server不管用什么写的。假定在本机他是类似http://localhost:5000/api/*这类的请求，现在添加配置让ajax请求可以直接proxy过去。
