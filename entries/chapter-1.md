@@ -1,5 +1,6 @@
 ## Webpack傻瓜式指南（一）
 
+**因为这篇启蒙文章比较受大家欢迎，在操作过程中大家也遇到很多坑，所以于2016.2.25更新 在文章最后总结了各种出现的错误**
 webpack最近很热，我一开始是想翻译一篇国外关于webpack的佳作，但是找来找去也没有一篇让我感觉到很满意的，好多都是一步到位，满屏幕都是React＋Webpack，官方文档写的不太好，好多点都没有解释的详细，所以我参考了几篇文章，写一篇容易上手的指南。本文适合第一次接触webpack的朋友，如果是老鸟，就不用看了。这是系列的第一篇，主要讲他最基本的用法。
 
 ### 比较
@@ -135,8 +136,10 @@ webpack
 
 安装webpack-dev-server
 
+**更新, 这里还是全局安装比较好**
+
 ```bash
-npm install webpack-dev-server --save-dev
+npm install webpack-dev-server －g
 ```
 安装完毕后 在config中添加配置
 
@@ -228,8 +231,10 @@ require('./main.css');
 
 那现在想使用一些有爱的css预编译程序，来点sass吧。 你可能已经想到了，再来个loader就行啦，确实是这样简单。
 
+**更新 这里还需要添加node-sass来解析sass文件**
+
 ```bash
-npm install sass-loader --save-dev
+npm install sass-loader node-sass --save-dev
 ```
 
 稍微修改一下config，删掉我们先前添加的css规则，加上下面的loader
@@ -394,6 +399,34 @@ app.appendChild(generateText());
 ### 结语
 
 第一部分到这里结束，经过一系列例子，你应该能够了解webpack最基本的用法了吧。是否已经喜欢上这种简洁的配置了？下一部分我们会继续讨论一些webpack更高级的用法。
+
+### debug
+
+有很多留言提出了一些大家遇到的错误，感谢留言中的一位[飘在心中的调调](https://www.zhihu.com/people/piao-zai-xin-zhong-de-diao-diao)同学，在一篇博文中总结了各种错误。我在这里总结一下。请参考这篇文章的修正方式：
+
+[初学webpack遇到的坑](http://www.yatessss.com/webpack/2016/01/29/%E5%88%9D%E5%AD%A6webpack%E9%81%87%E5%88%B0%E7%9A%84%E5%9D%91.html)
+
+* 初次运行webpack出现以下错误
+```bash
+throw err;
+canot find module 'webpack/lib/node/NodeTemplatePlugin'
+```
+
+* 初次运行webpack-dev-server出现以下错误
+
+```bash
+ERROR in multi main
+Module not found: Error: Cannot resolve module 'webpack/hot/dev-server'
+```
+
+* 初次运行sass-loder出现错误
+
+原文中缺少了添加node-sass
+
+```bash
+npm install --save-dev
+```
+
 
 ### 参考文章
 >[http://survivejs.com/webpack_react/](http://survivejs.com/webpack_react/)
