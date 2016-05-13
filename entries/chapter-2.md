@@ -59,7 +59,7 @@ javascript有了这个特性，css自然不能落后，其实很简单，只要�
 
 ### 使用preLoaders和postLoaders
 
-也许你想在写代码的时候检查自己的js是否符合jshint的规范，那么隆重推荐preLoaders和postLoaders，上一节我们已经非常了解loaders了，用它来处理各种类型的文件。perLoaders顾名思义就是在loaders执行之前处理的，webpack的处理顺序是perLoaders - loaders - postLoaders。
+也许你想在写代码的时候检查自己的js是否符合jshint的规范，那么隆重推荐preLoaders和postLoaders，上一节我们已经非常了解loaders了，用它来处理各种类型的文件。preLoaders顾名思义就是在loaders执行之前处理的，webpack的处理顺序是preLoaders - loaders - postLoaders。
 
 **安装jshint**
 
@@ -73,7 +73,7 @@ npm install jshint-loader --save-dev
 module: {
 ...
 	//和loaders一样的语法，很简单
-	perLoaders: [
+	preLoaders: [
 		{
 	   		test: /\.jsx?$/,
        		include: APP_PATH,
