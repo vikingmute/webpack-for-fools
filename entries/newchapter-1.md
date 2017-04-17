@@ -49,8 +49,8 @@ import hello from './hello'
 //调用这个方法
 hello()
 ```
-
-现在使用 webpack 来处理我们的入口文件。使用 webpack cli 可以传入两个参数，第一个是入口文件，这里就是 index.js, 第二个是输出文件的名字，这里命名为 bundle.js，暂时不管 bundle.js 里面是什么内容，做了哪些工作，但是可以知道就是 webpack 使用一定的魔力，把两个文件的依赖和运行在 bundle.js 完成了。
+当然现在如果直接在 html 页面里面引用 index.js 是无法执行的，浏览器是无法处理 ES6 模块或者是 common.js 规范的。
+那么现在使用 webpack 来处理我们的入口文件。使用 webpack cli 可以传入两个参数，第一个是入口文件，这里就是 index.js, 第二个是输出文件的名字，这里命名为 bundle.js，暂时不管 bundle.js 里面是什么内容，做了哪些工作，但是可以知道就是 webpack 使用一定的魔力，把两个文件的依赖和运行在 bundle.js 完成了。
 
 ```bash
 webpack index.js bundle.js
@@ -60,7 +60,7 @@ webpack index.js bundle.js
 ```html
 <html>
   <head>
-    <title> Our first webpack exmaple </title>>
+    <title> Our first webpack exmaple </title>
   </head>
   <body>
     <script src="bundle.js"></script>
@@ -68,3 +68,29 @@ webpack index.js bundle.js
 </html>
 ```
 现在用浏览器打开这个 html 页面，发现 alert 出现了，任务完成，庆祝一下！我们可以用 ES6 来完成模块化开发啦。
+
+### 使用配置文件
+
+现在每次都要使用 *webpack index.js bundle.js* 命令来生成文件，这种每次都要加参数的做法是程序员痛恨的，webpack 提供配置文件可以很容易的完成这项工作。
+
+在项目文件夹中新建 *webpack.config.js* 文件
+
+```javascript
+module.exports = {
+    // 入口文件名称
+    entry: './index.js',
+    // 输出文件名称
+    output: {
+        filename: 'bundle.js'
+    }
+}
+```
+然后在项目文件夹中运行
+
+```bash
+webpack
+```
+
+然后发现配置文件成功，文件生成成功啦！
+
+### 使用 Loader
