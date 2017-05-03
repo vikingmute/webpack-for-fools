@@ -94,3 +94,43 @@ webpack
 然后发现配置文件成功，文件生成成功啦！
 
 ### 使用 Loader
+
+上面的例子帮我们了解了 webpack 最基本的工作方式，下面来介绍一下 webpack 的一个强大功能，在开始 Loader 之前，要先知道另外一个概念 *module*，上面已经说过了这个 module（模块），上面所说的就是 common.js 或者说是 ES2015格式的import/export 的模块，在 webpack 中这两种类型的文件是天生支持的，但是 webpack 可以引入的 module，远远不止这些，可以是一个样式文件（less／css／sass）或者是一个图片文件（jpg／png／webp等等）或者是 svg文件 还可能是 coffeescript／typescript 类型，你听到这里也许有点震惊，在js文件中引进一个样式文件？应该没有人会这样做吧，那好的，让我们来试试吧。
+
+创建一个新文件 style.css
+```css
+body {
+    background: yellow;
+}
+```
+
+在 index.js 中直接引入这个文件
+
+```javascript
+//index.js
+import hello from './hello'
+// 引入样式文件
+import './style.css'
+
+hello()
+```
+
+然后运行 webpack 命令，发现出现了一行错误，看来我们还是太天真了。
+
+```
+ERROR in ./style.css
+Module parse failed: /Users/vzhang/Public/webpack-for-fools/codes/part3/style.css Unexpected token (1:5)
+You may need an appropriate loader to handle this file type.
+| body {
+|     background:yellow;
+| }
+ @ ./index.js 2:0-20
+```
+
+翻译过来的意思就是需要一个合适的loader来处理这个类型的文件(css文件)。webpack可以自动处理js类型的文件，但是css文件它不知道该如何处理，这里伟大的loader就出现了，其实通俗来说 loader 就是一系列的插件来处理不同类型的文件，并将它们成功的引入你的文件中。 **Loaders describe to webpack how to process non-JavaScript modules and include these dependencies into your bundles.**
+
+在项目目录下运行,来安装处理css文件需要的两个Loader：
+
+```bash
+npm install style-loader css-loader --save-dev
+```
