@@ -246,3 +246,76 @@ plugins: [
 ```
 
 配置完毕，运行 webpack 命令，运行完毕后，发现自动生成了 index.html 和 bundle.js, 打开bundle.js 这个文件，发现整个代码已经压缩过了。 庆祝时间，🎁！
+
+
+### 1.6 实时编译
+
+>>> 本节代码可以参见 /codes/part5/
+
+现在的开发方式还是比较落后，代码修改以后我们需要每次运行 webpack 命令，并且刷新浏览器以后才能看到新的结果，webpack 提供了一个 webpack-dev-server 的模块来一个本地的服务器来完成这项任务，它支持 live-reload(自动刷新)，甚至还有一个新的功能 HMR （hot-module-replacement），当你的文件改变的时候，它可以做到在页面里面动态的替换其中的模块，并不需要刷新，下面就让我们了解一下怎样开启这个功能。
+
+在项目目录里面运行
+
+```bash
+npm install --save-dev webpack-dev-server
+```
+
+在 package.json 中添加一条命令，来启动 webpack-dev-server
+
+```javascript
+"scripts": {
+  "start": "webpack-dev-server",
+},
+```
+> 为什么要这样做？
+
+为什么要将这个命令加到 npm scripts 中呢？不能直接运行 webpack-dev-server 这条命令呢？如果读者尝试直接运行这条命令，会发现出现错误 command not found: webpack-dev-server，因为没有全局安装这个模块，所以会找不到该命令，使用 npm scripts 的好处就是：当你使用这个 script 的时候，npm 会自动寻找当前目录下   ./node_modules/webpack-dev-server/bin 这个目录下的可执行文件，而且 npm scripts 提供了很多默认命令和钩子命令，对整个项目大有裨益。
+
+现在执行 npm start，发现终端中弹出大量信息，有两条信息值得我们注意
+
+```bash
+Project is running at http://localhost:8080/
+webpack output is served from /
+...
+webpack: Compiled successfully
+```
+打开 http://localhost:8080/ 地址，发现页面成功的出现，同时修改一些 Javascript 代码，并且保存，发现页面自动的刷新了。太好了，这下开发的过程就会大大的提升效率。
+
+webpack-dev-server 有大量的自定义配置，可以把具体的配置选项写到 webpack.config.js 中。现在代码修改还是自动刷新的，刚才所说的 HMR 听起来相当诱人，使用配置选项来开启它吧！
+
+```javascript
+// webpack.config.js
+...
+devServer: {
+    compress: true, // 让 dev－server 启动 gzip压缩
+    hot: true, // 让 dev－server 启动 HMR 功能
+}
+// 同时为了启用 HMR 还需要添加一个插件
+plugins: [
+     new webpack.optimize.UglifyJsPlugin(),
+     new HtmlWebpackPlugin({
+         title: 'Test App',
+     }),
+     // 新添加的内置的 plugin！
+     new webpack.HotModuleReplacementPlugin(),
+ ],
+...
+```
+
+这里暂且添加这两个配置，如果读者感兴趣，可以研究所有的配置[webpack-dev-server configuration](https://webpack.js.org/configuration/dev-server/)
+
+现在再次运行 npm start，打开 http://localhost:8080/ 地址，页面再次出现。
+
+打开 chrome 开发者工具的 console，发现如下两行输出：
+> [HMR] Waiting for update signal from WDS...
+> [WDS] Hot Module Replacement enabled.
+
+说明 HMR 已经启用，随便改变一下代码，console 里面会继续输出一些信息：
+> [WDS] App hot update...
+> [HMR] Checking for updates on the server...
+> [HMR] Updated modules:
+> [HMR]  - 15
+
+然后页面会自动发生变化，而不会刷新整个页面，这就为我们持续开发一些feature提供了便利，不用刷新重新操作以后到达某种已经改好的状态。
+
+这节学习了怎样时候 dev-server 做到实时编译，其实它就是把 express 做了一些自定义的配置，添加了 websocket 监听文件的变化，做出相应的改变。同时它提供了 webpack-dev-middleware 如果你想做更多更深层次的操作。
