@@ -1,0 +1,19 @@
+{
+  "name": "part6",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build:split": "webpack --config webpack.config.js",
+    "build:vendor": "webpack --config webpack.vendor.config.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^2.6.0"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4"
+  }
+}
