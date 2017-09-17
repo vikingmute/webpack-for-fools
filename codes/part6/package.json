@@ -1,19 +1,20 @@
 {
-  "name": "part6",
+  "name": "part3",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build:split": "webpack --config webpack.config.js",
-    "build:vendor": "webpack --config webpack.vendor.config.js"
+    "start": "webpack-dev-server --env development",
+    "build": "webpack"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "webpack": "^2.6.0"
-  },
-  "dependencies": {
-    "lodash": "^4.17.4"
+    "css-loader": "^0.28.1",
+    "html-webpack-plugin": "^2.28.0",
+    "style-loader": "^0.17.0",
+    "webpack": "^2.6.0",
+    "webpack-dev-server": "^2.4.5"
   }
 }

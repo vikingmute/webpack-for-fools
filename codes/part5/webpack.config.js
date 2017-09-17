@@ -10,15 +10,15 @@ module.exports = {
     },
     module: {
     	rules: [
-    		{ test: /\.css$/, use: [ { loader: 'style-loader' }, { loader: 'css-loader' } ]}
+    	   { test: /\.css$/, use: [ { loader: 'style-loader' }, { loader: 'css-loader' } ]}
     	]
     },
     plugins: [
-    	new webpack.optimize.UglifyJsPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-	    new HtmlWebpackPlugin({
-			title: 'Test App',
-	    })
+      new webpack.optimize.UglifyJsPlugin(),
+      new webpack.HotModuleReplacementPlugin(),
+      new HtmlWebpackPlugin({
+        title: 'Test App',
+      })
   	],
     devServer: {
         compress: true,

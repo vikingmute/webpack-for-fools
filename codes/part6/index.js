@@ -1,4 +1,3 @@
-import _ from 'lodash'
-
-console.log(_.camelCase('FOO BAR'))
-console.log('this is for pc page')
+import hello from './hello'
+import './style.css'
+hello('from another planet yaya')
