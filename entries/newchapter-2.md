@@ -1,4 +1,5 @@
 ## 第二章 Webpack进阶：实战技巧
+
 上一章我们通过一系列的例子入门了 webpack 的基本操作，在现实的开发过程中，我们遇见的问题往往比前面的几个简单例子要复杂的很多，那么在实战中可以总结为几个方面的内容，在下面的内容中一一道来。
 
 * 开发环境
@@ -158,3 +159,69 @@ module.exports = {
 ![Code splitting 2](../imgs/code-splitting-2.png)
 
 成功的生成了三个文件，将 lodash(vendor.bundle.js) 单独的打成了一个文件。
+
+
+### 2.3 动态加载
+
+>>> 本节代码可以参见 /codes/part7/
+
+上面的例子中使用 code splitting 特性成功的将一个生成很大的文件分割成了多个小力度的文件，这样对于脚本的加载速度有所提高，但是还是在网页加载的时候通过 script 标签，大家都知道 script 脚本的加载会阻塞浏览器之后的工作，那么这里我们更进一步，webpack 支持动态（异步）加载资源。
+
+webpack 是通过 **import()** 这个语法来实现动态加载的，这个语法同时也是 ECMAScript 的官方提案。
+
+现在来新建一个例子(index.js)， 在这个文件中，我们用 import() 来实现动态加载 lodash 这个库。
+
+```javascript
+// index
+import(/* webpackChunkName: "lodash" */ 'lodash').then(_ => {
+  alert(_.camelCase('CAMEL CASE FROM LODASH'))
+}).catch(err => console.error('error happens!', err))
+
+```
+
+上面这段代码没有什么难度，只要记住 **import()** 方法返回一个 Promise，调用 then() 方法以后返回的就是动态加载的对象。值得注意的是在 'lodash' 前面有一行奇怪的注释  webpackChunkName: "lodash" , 这个在这里是必须的，它对应这个 webpack 配置文件的一个字段。那么现在就来看一下配置文件有什么特殊之处。
+
+```javascript
+// webpack.config.js
+const webpack = require('webpack'); //to access built-in plugins
+
+module.exports = {
+  // 入口文件名称
+  entry: {
+    index: './index.js',
+  },
+  // 输出文件名称
+  output: {
+    filename: '[name].bundle.js',
+    // 添加这个来实现动态加载
+    chunkFilename: '[name].bundle.js',
+  }
+}
+```
+大家注意到了在 output 中有一个 chunkFilename属性，它决定了非入口文件的第三方文件的命名，而上面代码中的 webpackChunkName 就决定这个 [name] 这个变量的值，所以生成的文件应该是 lodash.bundle.js。
+
+如果你像了解更详细的 chunkFilename 和 import() 函数里面的参数，可以参阅文档：
+[chunkFilename](https://webpack.js.org/configuration/output/#output-chunkfilename)
+[import() 函数](https://webpack.js.org/api/module-methods/#import-)
+
+
+现在运行 webpack 命令，console 的生成正如我们的预料，生成了 index.bundle.js 和 lodash.bundle.js 两个文件。
+
+新建一个文件 index.html 同时引入 index.bundle.js。
+
+```html
+<html>
+  <head>
+    <title> This is the example for Dynamic Imports </title>
+  </head>
+  <body>
+    <script src="index.bundle.js"></script>
+  </body>
+</html>
+```
+然后再浏览器中打开这个文件。浏览器成功的弹出了 camelCaseFromLodash，说明 lodash 已经被成功的加载并执行。打开 开发者工具的 network 面板，如下图所示:
+![Import Network](../imgs/import-network.png)
+
+发现一个有趣的事实，lodash.bundel.js 这一列，有一个属性叫 Initiator，这是发起者的意思，这就说明 lodash 这个文件的请求发起来自于 index.bundle.js 的 104 行，这样也就印证了 lodash 是由 index 异步加载的。
+
+根据这个特性，还可以实现懒加载（lazy loading）的功能，那就是到特定的流程或者路由就调用 import() 函数动态加载和当前页面状态有关系的脚本文件。如果你前端时候 React.js ，那么你可以参阅[React Code Splitting and Lazy Loading ](https://reacttraining.com/react-router/web/guides/code-splitting) 来了解针对 React.js 合适的解决方案。
