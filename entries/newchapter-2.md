@@ -4,9 +4,9 @@
 
 * 开发环境
 * code splitting 特性
+* 动态加载
 * tree shaking 特性
 * 生产环境
-* lazy loading （懒加载）特性
 
 ### 2.1 开发环境
 
@@ -225,3 +225,35 @@ module.exports = {
 发现一个有趣的事实，lodash.bundel.js 这一列，有一个属性叫 Initiator，这是发起者的意思，这就说明 lodash 这个文件的请求发起来自于 index.bundle.js 的 104 行，这样也就印证了 lodash 是由 index 异步加载的。
 
 根据这个特性，还可以实现懒加载（lazy loading）的功能，那就是到特定的流程或者路由就调用 import() 函数动态加载和当前页面状态有关系的脚本文件。如果你前端时候 React.js ，那么你可以参阅[React Code Splitting and Lazy Loading ](https://reacttraining.com/react-router/web/guides/code-splitting) 来了解针对 React.js 合适的解决方案。
+
+### 2.4 Tree shaking
+
+可以想象我们的应用程序是一颗大树，大树上有非常多的枝叶，有用的源代码和第三方代码就像是绿色健康的叶子，而那些在程序中没有用到没有执行的代码就像是那些枯黄的树叶。顾名思义，tree shaking 就是摇晃这颗大树，让那些凋零的叶子都会自动掉下来。在 webpack 中，它的意思就是可以自动的删除那些没有被使用到的代码。这种方法又提出了一个概念称之为“编译中优化”，意思就是说在编译过程中通过各种方法来优化输出代码的结果。这个概念最早是被 Rollup 这个工具提出来的，webpack 将他发扬光大，它自带 tree shaking 的支持。
+
+在这里简单讲一下如果想使用 webpack 中的 tree shaking 优化应该怎样配置，其实非常简单，只要做到两点就可以自动启用这项优化。
+
+* 使用 ES2015 的模块语法（import，export），我相信许多人在应用程序中已经使用了这种格式。
+* 使用一个支持 tree shaking 的代码压缩工具。（比如说 UglifyJSPlugin）
+
+注意 tree shaking 并不是 webpack 本身执行的代码优化，而是由第三方工具（例如 UglifyJSPlugin）来最终完成的真正优化处理。
+由于该特性比较简单，就不单独已例子说明。只需要满足上面那两个条件就可以自动引入该优化方法。
+
+安装 UglifyJSPlugin 插件
+
+```bash
+npm install --save-dev uglifyjs-webpack-plugin
+```
+
+在配置文件中引用
+
+```javascript
+// webpack.config.js
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+module.exports = {
+  ...
+  plugins: [
+    new UglifyJSPlugin()
+  ]
+
+}
+```
