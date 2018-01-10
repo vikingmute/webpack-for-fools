@@ -163,7 +163,7 @@ module.exports = {
 
 ### 2.3 动态加载
 
->>> 本节代码可以参见 /codes/part7/
+>>> 本节代码可以参见 /codes/part8/
 
 上面的例子中使用 code splitting 特性成功的将一个生成很大的文件分割成了多个小力度的文件，这样对于脚本的加载速度有所提高，但是还是在网页加载的时候通过 script 标签，大家都知道 script 脚本的加载会阻塞浏览器之后的工作，那么这里我们更进一步，webpack 支持动态（异步）加载资源。
 
@@ -257,3 +257,181 @@ module.exports = {
 
 }
 ```
+
+### 2.5 生产环境
+
+>>> 本节代码可以参见 /codes/part9/
+
+之前我们了解了针对开发环境配置 webpack 的特性，包括 source map， 和之前提到的支持实时编译和 HMR 的本地服务器。那么生产环境和开发环境的目的完全不同，生产环境最重要的目的就是生成文件的大小，在当今的网路时代，加载速度就是第一生命力，那么生成文件的大小是一个非常重要的因素。
+
+既然是两个完全不同的目的，那么这里我们推荐使用两个不同的配置文件完成不同的任务。可以把开发环境的配置文件称为 webpack.dev.js, 生产环境称为 webpack.prod.js。
+
+那这里的测试项目就稍微复杂一点，它由一个入口文件(index.js)，一个样式文件(style.js)，和两个个第三方依赖（React，react-dom）组成。
+
+安装依赖：
+```bash
+npm install react react-dom --save
+```
+
+
+然后写入口文件：
+```javascript
+// index.js
+import React from 'react'
+import { render } from 'react-dom' 
+import './style.css'
+
+var container = document.body.appendChild(
+  document.createElement('div')
+)
+
+var element = React.createElement(
+  'h1',
+  null,
+  'Hello, world!'
+);
+
+render(element, container)
+```
+这里就是把一个简单的 React Element 渲染到一个 DOM 节点上，由于这里没有配置 Babel，我没有使用 JSX 也没有使用 ES2015 的语法。它最后生成的效果是这样的。
+
+![React project](../imgs/react-project.png)
+
+开发环境的配置文件大家可以说是非常的熟悉，在这里再写一遍
+
+```javascript
+// webpack.dev.js
+const HtmlWebpackPlugin = require('html-webpack-plugin'); //installed via npm
+const webpack = require('webpack'); //to access built-in plugins
+
+module.exports = {
+    // 入口文件名称
+    entry: './index.js',
+    // 输出文件名称
+    output: {
+        filename: 'bundle.js'
+    },
+    devtool: 'inline-source-map',
+    module: {
+    	rules: [
+    	   { test: /\.css$/, use: [ { loader: 'style-loader' }, { loader: 'css-loader' } ]}
+    	]
+    },
+    plugins: [
+      new webpack.HotModuleReplacementPlugin(),
+      new HtmlWebpackPlugin({
+        title: 'Test App',
+      })
+  	],
+    devServer: {
+        compress: true,
+        hot: true,
+        hotOnly: true,
+    }
+}
+```
+回顾一下前面的知识，这里针对开发环境添加了最直观的 inline-source-map，启用了 webpack-dev-server，并且添加了 HMR 的插件。
+
+那么对比开发环境，针对生产环境的目的，我们对应一个全新的配置文件：
+
+```javascript
+const HtmlWebpackPlugin = require('html-webpack-plugin'); //installed via npm
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const webpack = require('webpack'); //to access built-in plugins
+const path = require('path');
+
+module.exports = {
+    // 入口文件名称
+    entry: {
+      index: './index.js',
+      vendor: ['react', 'react-dom'],
+    },
+    // 输出文件名称
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: '[name].bundle.js',
+    },
+    devtool: 'source-map',
+    module: {
+    	rules: [
+    	   { 
+           test: /\.css$/, 
+           use: ExtractTextPlugin.extract({
+                  fallback: "style-loader",
+                  use: "css-loader"
+                })
+          }
+        ]
+    },
+    plugins: [
+      new webpack.optimize.UglifyJsPlugin({
+        sourceMap: true
+      }),
+      new ExtractTextPlugin("styles.css"),
+      new webpack.optimize.CommonsChunkPlugin({
+          name: "vendor"
+      }),
+      new HtmlWebpackPlugin({
+        title: 'Test App',
+      })
+  	]
+}
+```
+我们发现上面的配置文件和开发环境的配置有很多不同，大约有这几点是为了生产环境的优化而做：
+* vendor: ['react', 'react-dom'] 和 new webpack.optimize.CommonsChunkPlugin({name: "vendor"}) 将较大的第三方库单独的打成一个文件，这样有利于更快的加载，这是利用了之前所讲过的 code splitting 技术。
+* 使用 webpack.optimize.UglifyJsPlugin 来压缩生成的代码并且通过 tree shaking 技术来缩小生成文件的大小。
+* 使用 devtool: 'source-map', 我们希望在生成环境中也能有 sourceMap 来追踪错误以及便于调试代码，所以需要一个快速并且便捷的 sourceMap 类型, 这个配置会另外生成一个压缩版本的 map 文件，注意不要在生成环境使用 'inline-source-map' 这个配置，这样会大幅增加生成文件的大小。
+* 在之前一章 Loader 一节我们讲过 css 样式是通过 style-loader 动态通过 Javascript 插入到 head 中的，这种做法有两个弊端就是当 JS 文件没有加载完成的时候，页面会完全没有样式，而且会无端的增大 JS 文件的大小，我们希望能单独生成一个 CSS 文件，使用我们熟悉的方法来在 html 文件中引入这个 CSS 文件，这里可以使用 ExtractTextPlugin 这个插件来生成这个单独的 CSS 文件，具体配置可以看上面的时候方法。
+
+然后将生产环境的打包命令添加到 npm scripts 当中。
+
+```javascript
+// package.json
+"scripts": {
+  "dev": "webpack-dev-server --config webpack.dev.js"
+  "build": "webpack --config webpack.prod.js"
+},
+```
+现在来运行 npm run build 命令看看效果怎样。
+我们发现 dist 文件夹里面生成了几个新的文件，如下图所示。
+
+![Production files](../imgs/production-files.png)
+
+* index.bundle.js 生成的主要 JS 文件
+* vendor.bundle.js 生成的第三方文件库
+* style.css 单独生成的 css 样式文件
+* index.html HtmlWebpackPlugin 生成的 html 文件
+* 还有所有JS和样式文件的 sourceMap (.map) 文件
+
+通过这个配置文件，我们基本了解了对于生产环境打包的各种注意事项。最后还有一点要同学们特别注意：
+
+**配置 node 环境变量**
+
+许多框架和库（比如 React 和 Redux）都会根据 **process.env.NODE_ENV** 这个变量来决定要把多少另外的代码包含进去。假如这个变量不等于 production 的话，那么很有可能就会添加更多的 log 和 测试信息，让开发者开发的时候更容易发现问题。反之，如果是生产环境，那么这些额外的代码都将不会被包含进去，它关注的和我们之前生产环境关注的点一样：那就是文件的大小和加载的速度。
+
+所以需要 webpack 内置的 *DefinePlugin* 来确定这些代码库的环境变量。
+
+有个这个插件只需要在配置文件中这样添加：
+
+```javascript
+// webpack.prod.js
+...
+plugins: [
++  new webpack.DefinePlugin({
++       'process.env.NODE_ENV': JSON.stringify('production')
++  }),
+  new webpack.optimize.UglifyJsPlugin({
+    sourceMap: true
+  }),
+  new ExtractTextPlugin("styles.css"),
+  new webpack.optimize.CommonsChunkPlugin({
+      name: "vendor"
+  }),
+  new HtmlWebpackPlugin({
+    title: 'Test App',
+  })
+]
+...
+```
+这样添加上面插件的内容，可以将当前的环境变量设置为 production，这样让对环境变量有特殊设置的第三方库或者框架就可以完成优化，我们对比一下加这个插件和不加所生成的 vendor（React + react-dom） 文件的大小：原始大小 （283Kb），加了插件的大小 （101Kb）。我们可以显著的发现，文件大小的差异是惊人的！
+
